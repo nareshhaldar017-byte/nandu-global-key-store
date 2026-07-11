@@ -1,3 +1,5 @@
+import os
+
 BOT_TOKEN = "YOUR_BOT_TOKEN"
 
 ADMIN_ID = 0
