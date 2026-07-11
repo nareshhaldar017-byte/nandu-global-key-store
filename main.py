@@ -140,3 +140,70 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "⏳ Select Duration:",
             reply_markup=InlineKeyboardMarkup(buttons)
         )
+async def buy_duration(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    query = update.callback_query
+    await query.answer()
+
+    duration = query.data.replace(
+        "buy_",
+        ""
+    )
+
+    user_id = query.from_user.id
+
+    product = user_orders.get(
+        user_id,
+        {}
+    ).get(
+        "product"
+    )
+
+
+    if not product:
+        await query.message.reply_text(
+            "❌ Product not found. Please restart."
+        )
+        return
+
+
+    amount = DURATIONS.get(
+        duration
+    )
+
+
+    order_id = str(
+        uuid.uuid4()
+    )[:8]
+
+
+    user_orders[user_id] = {
+        "product": product,
+        "duration": duration,
+        "amount": amount,
+        "order_id": order_id
+    }
+
+
+    add_order(
+        order_id,
+        user_id,
+        product,
+        duration,
+        amount,
+        "",
+        "pending"
+    )
+
+
+    await query.message.reply_photo(
+        photo=open(QR_IMAGE, "rb"),
+        caption=(
+            "💳 Payment Details\n\n"
+            f"📦 Product: {product}\n"
+            f"⏳ Duration: {duration}\n"
+            f"💰 Amount: ₹{amount}\n\n"
+            f"UPI: {UPI_ID}\n\n"
+            "Payment karne ke baad UTR number bheje."
+        )
+    )
