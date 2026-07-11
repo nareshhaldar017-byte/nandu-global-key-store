@@ -8,7 +8,7 @@ QR_IMAGE = "qr.png"
 
 UPI_ID = "yourupi@upi"
 
-CHANNEL_URL = "https://t.me/YOUR_CHANNEL"
+CHANNEL_URL = "https://t.me/primesupport_boi"
 
 ADMIN_USERNAME = os.getenv(
     "ADMIN_USERNAME",
