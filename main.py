@@ -207,3 +207,49 @@ async def buy_duration(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Payment karne ke baad UTR number bheje."
         )
     )
+async def utr_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_id = update.effective_user.id
+
+    utr = update.message.text
+
+
+    order = user_orders.get(user_id)
+
+
+    if not order:
+
+        await update.message.reply_text(
+            "❌ Pehle product purchase kare."
+        )
+        return
+
+
+    add_order(
+        order["order_id"],
+        user_id,
+        order["product"],
+        order["duration"],
+        order["amount"],
+        utr
+    )
+
+
+    await update.message.reply_text(
+        "✅ Payment details received.\n"
+        "⏳ Admin approval ka wait kare."
+    )
+
+
+    await context.bot.send_message(
+        chat_id=ADMIN_ID,
+        text=(
+            "🆕 New Order\n\n"
+            f"🆔 Order ID: {order['order_id']}\n"
+            f"👤 User ID: {user_id}\n"
+            f"📦 Product: {order['product']}\n"
+            f"⏳ Duration: {order['duration']}\n"
+            f"💰 Amount: ₹{order['amount']}\n"
+            f"🔢 UTR: {utr}"
+        )
+    )
