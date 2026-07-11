@@ -253,3 +253,50 @@ async def utr_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🔢 UTR: {utr}"
         )
     )
+def main():
+
+    create_tables()
+
+    app = Application.builder().token(BOT_TOKEN).build()
+
+
+    app.add_handler(
+        CommandHandler(
+            "start",
+            start
+        )
+    )
+
+
+    app.add_handler(
+        CallbackQueryHandler(
+            button
+        )
+    )
+
+
+    app.add_handler(
+        CallbackQueryHandler(
+            buy_duration,
+            pattern="^buy_"
+        )
+    )
+
+
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & ~filters.COMMAND,
+            utr_handler
+        )
+    )
+
+
+    print("Bot Started")
+
+
+    app.run_polling()
+
+
+
+if __name__ == "__main__":
+    main()
